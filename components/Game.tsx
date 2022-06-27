@@ -48,6 +48,9 @@ export default function Game({
       {...rest}
     >
       <h1 className="text-lg text-center font-bold">{playerState.name}</h1>
+      <Button disabled={!gameState.canRollDice} onClick={gameState.rollDice}>
+        Rolar
+      </Button>
       <div className="grid grid-flow-col gap-2">
         {(gameState.dice.length
           ? gameState.dice
@@ -73,9 +76,6 @@ export default function Game({
           />
         ))}
       </div>
-      <Button disabled={!gameState.canRollDice} onClick={gameState.rollDice}>
-        Rolar
-      </Button>
       <Button
         disabled={gameState.dice.length === 0 || !selectedPlayType}
         onClick={handleChoosePlayType}

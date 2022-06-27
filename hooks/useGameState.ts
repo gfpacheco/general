@@ -45,6 +45,22 @@ export enum CombinationPlayType {
   chance = 'chance',
 }
 
+export const playsLabels: Record<PlayType, string> = {
+  [ValuePlayType.one]: 'Um',
+  [ValuePlayType.two]: 'Dois',
+  [ValuePlayType.three]: 'Três',
+  [ValuePlayType.four]: 'Quatro',
+  [ValuePlayType.five]: 'Cinco',
+  [ValuePlayType.six]: 'Seis',
+  [CombinationPlayType.threeOfAKind]: 'Trinca',
+  [CombinationPlayType.fourOfAKind]: 'Quadra',
+  [CombinationPlayType.fullHouse]: 'Full House',
+  [CombinationPlayType.smallStraight]: 'Sequência menor',
+  [CombinationPlayType.largeStraight]: 'Sequência maior',
+  [CombinationPlayType.general]: 'General',
+  [CombinationPlayType.chance]: 'Chance',
+};
+
 export type PlayType = ValuePlayType | CombinationPlayType;
 
 export const allPlayTypes = [

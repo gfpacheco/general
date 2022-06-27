@@ -20,8 +20,8 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="h-full p-4 flex flex-col items-center justify-center">
-      <div className="w-full max-h-full max-w-md border rounded bg-white p-4 flex flex-col">
+    <div className="h-full sm:p-4 flex flex-col items-center justify-center">
+      <div className="w-full max-h-full max-w-md sm:border rounded bg-white p-4 flex flex-col">
         {playersState ? (
           <GameEnd playersState={playersState} onPlayAgain={handlePlayAgain} />
         ) : names ? (

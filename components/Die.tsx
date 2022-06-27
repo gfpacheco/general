@@ -19,7 +19,7 @@ export default function Die({ className, die, ...rest }: DieProps) {
       {die?.value}
       {die?.locked && (
         <svg
-          className="absolute bottom-2 right-2"
+          className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 max-w-[25%] max-h-[25%]"
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"

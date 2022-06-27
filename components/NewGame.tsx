@@ -46,7 +46,6 @@ export default function NewGame({
     >
       <h1 className="text-lg text-center font-bold">General</h1>
       <div className="flex-1">
-        {!names.length && <p className="text-gray-500">Adicione um jogador</p>}
         {names.map((name, index) => (
           <p key={index} className="px-4 py-2 flex">
             <span className="flex-1">{name}</span>

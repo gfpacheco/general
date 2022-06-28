@@ -30,6 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="msapplication-TileColor" content="#2b5797" />
         <meta name="msapplication-config" content="browserconfig.xml" />
         <meta name="theme-color" content="#000000" />
+        <title>General</title>
       </Head>
       <Component {...pageProps} />
     </>

@@ -24,6 +24,7 @@ export interface Die {
 export interface PlayerState {
   name: string;
   plays: Partial<Plays>;
+  bonus: number;
 }
 
 export enum ValuePlayType {
@@ -35,6 +36,8 @@ export enum ValuePlayType {
   six = 'six',
 }
 
+export const allValuePlayTypes = Object.keys(ValuePlayType) as ValuePlayType[];
+
 export enum CombinationPlayType {
   threeOfAKind = 'threeOfAKind',
   fourOfAKind = 'fourOfAKind',
@@ -44,6 +47,10 @@ export enum CombinationPlayType {
   general = 'general',
   chance = 'chance',
 }
+
+export const allCombinationPlayTypes = Object.keys(
+  CombinationPlayType,
+) as CombinationPlayType[];
 
 export const playsLabels: Record<PlayType, string> = {
   [ValuePlayType.one]: 'Um',
@@ -64,17 +71,18 @@ export const playsLabels: Record<PlayType, string> = {
 export type PlayType = ValuePlayType | CombinationPlayType;
 
 export const allPlayTypes = [
-  ...Object.keys(ValuePlayType),
-  ...Object.keys(CombinationPlayType),
+  ...allValuePlayTypes,
+  ...allCombinationPlayTypes,
 ] as PlayType[];
 
-export type Plays = Record<ValuePlayType | CombinationPlayType, number>;
+export type Plays = Record<PlayType, number>;
 
 function createInitialGameState(names: string[]): RawGameState {
   return {
     playersState: names.map((name) => ({
       name,
       plays: {},
+      bonus: 0,
     })),
     currentPlayer: 0,
     currentRoll: 0,
@@ -146,6 +154,23 @@ function calculatePlayScore(playType: PlayType, dice: Die[]) {
   }
 }
 
+export function sumScore(
+  plays: Partial<Plays>,
+  playTypeType?: typeof ValuePlayType | typeof CombinationPlayType,
+) {
+  let playsToSum = Object.entries(plays);
+
+  if (playTypeType) {
+    playsToSum = playsToSum.filter(([playType]) => playType in playTypeType);
+  }
+
+  return playsToSum.reduce((acc, [_, score]) => acc + score, 0);
+}
+
+export function calculateBonusScore(valuePlaysScore: number) {
+  return valuePlaysScore >= 63 ? 35 : 0;
+}
+
 export default function useGameState(names: string[]): GameState {
   const [gameState, setGameState] = useState(createInitialGameState(names));
 
@@ -175,14 +200,22 @@ export default function useGameState(names: string[]): GameState {
   }
 
   function choosePlayType(playType: PlayType) {
+    const plays = update(
+      gameState.playersState[gameState.currentPlayer].plays,
+      {
+        [playType]: {
+          $set: calculatePlayScore(playType, gameState.dice),
+        },
+      },
+    );
+
     setGameState(
       update(gameState, {
         playersState: {
           [gameState.currentPlayer]: {
-            plays: {
-              [playType]: {
-                $set: calculatePlayScore(playType, gameState.dice),
-              },
+            plays: { $set: plays },
+            bonus: {
+              $set: calculateBonusScore(sumScore(plays, ValuePlayType)),
             },
           },
         },

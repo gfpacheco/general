@@ -2,13 +2,21 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 
 import useGameState, {
+  allCombinationPlayTypes,
   allPlayTypes,
+  allValuePlayTypes,
+  calculateBonusScore,
+  CombinationPlayType,
   PlayerState,
+  playsLabels,
   PlayType,
+  sumScore,
+  ValuePlayType,
 } from '../hooks/useGameState';
 import Button from './Button';
 import Die from './Die';
 import Play from './Play';
+import Sum from './Sum';
 
 export interface GameProps extends React.ComponentPropsWithoutRef<'div'> {
   names: string[];
@@ -27,6 +35,18 @@ export default function Game({
   >();
   const playerState = gameState.playersState[gameState.currentPlayer];
 
+  let valuePlaysScore = sumScore(playerState.plays, ValuePlayType);
+  let bonusScore = playerState.bonus;
+  if (selectedPlayType && selectedPlayType in ValuePlayType) {
+    valuePlaysScore += gameState.plays[selectedPlayType] ?? 0;
+    bonusScore = calculateBonusScore(valuePlaysScore);
+  }
+
+  let combinationPlaysScore = sumScore(playerState.plays, CombinationPlayType);
+  if (selectedPlayType && selectedPlayType in CombinationPlayType) {
+    combinationPlaysScore += gameState.plays[selectedPlayType] ?? 0;
+  }
+
   useEffect(() => {
     if (
       gameState.playersState.every((playerState) => {
@@ -40,6 +60,19 @@ export default function Game({
   function handleChoosePlayType() {
     gameState.choosePlayType(selectedPlayType!);
     setSelectedPlayType(undefined);
+  }
+
+  function renderPlayType(playType: PlayType) {
+    return (
+      <Play
+        key={playType}
+        label={playsLabels[playType]}
+        score={playerState.plays[playType] ?? gameState.plays[playType]}
+        onClick={() => setSelectedPlayType(playType)}
+        selected={playType === selectedPlayType}
+        disabled={playerState.plays[playType] !== undefined}
+      />
+    );
   }
 
   return (
@@ -64,17 +97,15 @@ export default function Game({
         ))}
       </div>
       <div className="min-h-0 py-4 border-t border-b grid grid-flow-row gap-1 overflow-y-auto">
-        {allPlayTypes.map((playType) => (
-          <Play
-            key={playType}
-            playType={playType}
-            playerScore={playerState.plays[playType]}
-            potentialScore={gameState.plays[playType]}
-            onClick={() => setSelectedPlayType(playType)}
-            selected={selectedPlayType === playType}
-            disabled={playerState.plays[playType] !== undefined}
-          />
-        ))}
+        {allValuePlayTypes.map(renderPlayType)}
+        <Sum label="Subtotal" score={valuePlaysScore} />
+        <Sum label="Bônus" score={bonusScore} />
+        {allCombinationPlayTypes.map(renderPlayType)}
+        <Sum label="Subtotal" score={combinationPlaysScore} />
+        <Sum
+          label="Total"
+          score={valuePlaysScore + bonusScore + combinationPlaysScore}
+        />
       </div>
       <Button
         disabled={gameState.dice.length === 0 || !selectedPlayType}

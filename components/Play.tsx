@@ -1,24 +1,20 @@
 import classNames from 'classnames';
 
-import { playsLabels, PlayType } from '../hooks/useGameState';
-
 export interface PlayProps extends React.ComponentPropsWithoutRef<'button'> {
-  playType: PlayType;
-  playerScore?: number;
-  potentialScore: number;
-  selected: boolean;
+  label: string;
+  score: number;
+  selected?: boolean;
+  static?: boolean;
 }
 
 export default function Play({
   className,
-  playType,
-  playerScore,
-  potentialScore,
+  label,
+  score,
   selected,
+  disabled,
   ...rest
 }: PlayProps) {
-  const isAvailable = playerScore === undefined;
-
   return (
     <button
       type="button"
@@ -26,12 +22,13 @@ export default function Play({
         className,
         'px-4 py-1 border rounded flex text-left',
         selected && 'bg-blue-200',
-        !isAvailable && 'bg-gray-200',
+        disabled && 'bg-gray-200',
       )}
+      disabled={disabled}
       {...rest}
     >
-      <div className="flex-1">{playsLabels[playType]}</div>
-      <div className="font-bold">{playerScore ?? potentialScore}</div>
+      <div className="flex-1">{label}</div>
+      <div className="font-bold">{score}</div>
     </button>
   );
 }

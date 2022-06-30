@@ -8,6 +8,7 @@
   html {
     @apply sm:bg-gray-100;
     font-family: 'Roboto Condensed', sans-serif;
+    @apply text-gray-900;
   }
 
   html,

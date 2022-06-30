@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 
 import { Die as DieType } from '../hooks/useGameState';
+import Dot from './Dot';
 
 export interface DieProps extends React.ComponentPropsWithoutRef<'button'> {
   die?: DieType;
@@ -11,12 +12,20 @@ export default function Die({ className, die, ...rest }: DieProps) {
     <button
       className={classNames(
         className,
-        'relative flex-1 border rounded-lg flex items-center justify-center text-4xl aspect-square',
+        'relative flex-1 border rounded-lg p-2 grid grid-cols-3 grid-rows-3 items-center justify-items-center aspect-square',
         die?.locked && 'bg-gray-400',
       )}
       {...rest}
     >
-      {die?.value}
+      <Dot value={die?.value} visibleFor={[2, 3, 4, 5, 6]} />
+      <Dot />
+      <Dot value={die?.value} visibleFor={[4, 5, 6]} />
+      <Dot value={die?.value} visibleFor={[6]} />
+      <Dot value={die?.value} visibleFor={[1, 3, 5]} />
+      <Dot value={die?.value} visibleFor={[6]} />
+      <Dot value={die?.value} visibleFor={[4, 5, 6]} />
+      <Dot />
+      <Dot value={die?.value} visibleFor={[2, 3, 4, 5, 6]} />
       {die?.locked && (
         <svg
           className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 max-w-[25%] max-h-[25%]"

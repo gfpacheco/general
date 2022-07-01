@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 
+import useDieValue from '../hooks/useDieValue';
 import { Die as DieType } from '../hooks/useGameState';
 import Dot from './Dot';
 
@@ -8,6 +9,8 @@ export interface DieProps extends React.ComponentPropsWithoutRef<'button'> {
 }
 
 export default function Die({ className, die, ...rest }: DieProps) {
+  const value = useDieValue(die);
+
   return (
     <button
       className={classNames(
@@ -17,15 +20,15 @@ export default function Die({ className, die, ...rest }: DieProps) {
       )}
       {...rest}
     >
-      <Dot value={die?.value} visibleFor={[2, 3, 4, 5, 6]} />
+      <Dot value={value} visibleFor={[2, 3, 4, 5, 6]} />
       <Dot />
-      <Dot value={die?.value} visibleFor={[4, 5, 6]} />
-      <Dot value={die?.value} visibleFor={[6]} />
-      <Dot value={die?.value} visibleFor={[1, 3, 5]} />
-      <Dot value={die?.value} visibleFor={[6]} />
-      <Dot value={die?.value} visibleFor={[4, 5, 6]} />
+      <Dot value={value} visibleFor={[4, 5, 6]} />
+      <Dot value={value} visibleFor={[6]} />
+      <Dot value={value} visibleFor={[1, 3, 5]} />
+      <Dot value={value} visibleFor={[6]} />
+      <Dot value={value} visibleFor={[4, 5, 6]} />
       <Dot />
-      <Dot value={die?.value} visibleFor={[2, 3, 4, 5, 6]} />
+      <Dot value={value} visibleFor={[2, 3, 4, 5, 6]} />
       {die?.locked && (
         <svg
           className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 max-w-[25%] max-h-[25%]"

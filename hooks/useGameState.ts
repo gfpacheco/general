@@ -142,7 +142,7 @@ function calculatePlayScore(playType: PlayType, dice: Die[]) {
       return [0, 1, 1, 1, 1, 1].every(
         (count, index) => summary[index] === count,
       )
-        ? 30
+        ? 40
         : 0;
     case CombinationPlayType.general:
       return summary.some((count) => count === 5) ? 50 : 0;

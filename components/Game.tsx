@@ -7,6 +7,7 @@ import useGameState, {
   allValuePlayTypes,
   calculateBonusScore,
   CombinationPlayType,
+  GameState,
   PlayerState,
   playsLabels,
   PlayType,
@@ -19,17 +20,16 @@ import Play from './Play';
 import Sum from './Sum';
 
 export interface GameProps extends React.ComponentPropsWithoutRef<'div'> {
-  names: string[];
-  onGameEnd: (playersState: PlayerState[]) => void;
+  gameState: GameState;
+  endGame: (playersState: PlayerState[]) => void;
 }
 
 export default function Game({
   className,
-  names,
-  onGameEnd,
+  gameState,
+  endGame,
   ...rest
 }: GameProps) {
-  const gameState = useGameState(names);
   const [selectedPlayType, setSelectedPlayType] = useState<
     PlayType | undefined
   >();
@@ -53,9 +53,9 @@ export default function Game({
         return Object.keys(playerState.plays).length === allPlayTypes.length;
       })
     ) {
-      onGameEnd(gameState.playersState);
+      endGame(gameState.playersState);
     }
-  }, [gameState.playersState, onGameEnd]);
+  }, [gameState.playersState, endGame]);
 
   function handleChoosePlayType() {
     gameState.choosePlayType(selectedPlayType!);

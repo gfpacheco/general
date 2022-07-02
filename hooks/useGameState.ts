@@ -1,5 +1,4 @@
 import update from 'immutability-helper';
-import { useState } from 'react';
 
 export interface RawGameState {
   playersState: PlayerState[];
@@ -77,7 +76,7 @@ export const allPlayTypes = [
 
 export type Plays = Record<PlayType, number>;
 
-function createInitialGameState(names: string[]): RawGameState {
+export function createInitialGameState(names: string[]): RawGameState {
   return {
     playersState: names.map((name) => ({
       name,
@@ -171,10 +170,15 @@ export function calculateBonusScore(valuePlaysScore: number) {
   return valuePlaysScore >= 63 ? 35 : 0;
 }
 
-export default function useGameState(names: string[]): GameState {
-  const [gameState, setGameState] = useState(createInitialGameState(names));
+export default function useGameState(
+  gameState: RawGameState | undefined,
+  setGameState: (gameState: RawGameState) => void,
+): GameState | undefined {
+  if (!gameState) {
+    return undefined;
+  }
 
-  function rollDice() {
+  const rollDice = () => {
     const dice = gameState.dice.length
       ? gameState.dice.map((die) => (die.locked ? die : rollDie()))
       : [rollDie(), rollDie(), rollDie(), rollDie(), rollDie()];
@@ -185,9 +189,9 @@ export default function useGameState(names: string[]): GameState {
         dice: { $set: dice },
       }),
     );
-  }
+  };
 
-  function toggleDieLock(index: number) {
+  const toggleDieLock = (index: number) => {
     setGameState(
       update(gameState, {
         dice: {
@@ -197,9 +201,9 @@ export default function useGameState(names: string[]): GameState {
         },
       }),
     );
-  }
+  };
 
-  function choosePlayType(playType: PlayType) {
+  const choosePlayType = (playType: PlayType) => {
     const plays = update(
       gameState.playersState[gameState.currentPlayer].plays,
       {
@@ -226,7 +230,7 @@ export default function useGameState(names: string[]): GameState {
         dice: { $set: [] },
       }),
     );
-  }
+  };
 
   return {
     ...gameState,

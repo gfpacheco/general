@@ -14,13 +14,13 @@ import Button from './Button';
 
 export interface GameEndProps extends React.ComponentPropsWithoutRef<'div'> {
   playersState: PlayerState[];
-  onPlayAgain: () => void;
+  restartGame: () => void;
 }
 
 export default function GameEnd({
   className,
   playersState,
-  onPlayAgain,
+  restartGame,
   ...rest
 }: GameEndProps) {
   const playersScores = playersState.map(
@@ -114,7 +114,7 @@ export default function GameEnd({
           </tbody>
         </table>
       </div>
-      <Button onClick={onPlayAgain}>Jogar novamente</Button>
+      <Button onClick={restartGame}>Jogar novamente</Button>
     </div>
   );
 }

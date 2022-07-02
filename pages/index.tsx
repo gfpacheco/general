@@ -15,7 +15,11 @@ const Home: NextPage = () => {
         {playersState ? (
           <GameEnd playersState={playersState} restartGame={restartGame} />
         ) : gameState ? (
-          <Game gameState={gameState} endGame={endGame} />
+          <Game
+            gameState={gameState}
+            endGame={endGame}
+            restartGame={restartGame}
+          />
         ) : (
           <NewGame onStartGame={startGame} />
         )}

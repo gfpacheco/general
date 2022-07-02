@@ -22,12 +22,14 @@ import Sum from './Sum';
 export interface GameProps extends React.ComponentPropsWithoutRef<'div'> {
   gameState: GameState;
   endGame: (playersState: PlayerState[]) => void;
+  restartGame: () => void;
 }
 
 export default function Game({
   className,
   gameState,
   endGame,
+  restartGame,
   ...rest
 }: GameProps) {
   const [selectedPlayType, setSelectedPlayType] = useState<
@@ -80,7 +82,16 @@ export default function Game({
       className={classNames(className, 'min-h-0 grid grid-flow-row gap-4')}
       {...rest}
     >
-      <h1 className="text-lg text-center font-bold">{playerState.name}</h1>
+      <h1 className="relative text-lg text-center font-bold">
+        {playerState.name}
+        <button
+          className="absolute left-0 top-0 bottom-0 rotate-180"
+          type="button"
+          onClick={restartGame}
+        >
+          ➜
+        </button>
+      </h1>
       <Button disabled={!gameState.canRollDice} onClick={gameState.rollDice}>
         Rolar
       </Button>

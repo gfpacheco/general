@@ -91,6 +91,7 @@ export default function Game({
         ).map((die, index) => (
           <Die
             key={index}
+            currentRoll={gameState.currentRoll}
             die={die}
             onClick={die ? () => gameState.toggleDieLock(index) : undefined}
           />

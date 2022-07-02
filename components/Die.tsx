@@ -5,11 +5,17 @@ import { Die as DieType } from '../hooks/useGameState';
 import Dot from './Dot';
 
 export interface DieProps extends React.ComponentPropsWithoutRef<'button'> {
+  currentRoll: number;
   die?: DieType;
 }
 
-export default function Die({ className, die, ...rest }: DieProps) {
-  const value = useDieValue(die);
+export default function Die({
+  className,
+  currentRoll,
+  die,
+  ...rest
+}: DieProps) {
+  const value = useDieValue(currentRoll, die);
 
   return (
     <button

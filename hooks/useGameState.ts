@@ -2,6 +2,7 @@ import update from 'immutability-helper';
 
 export interface RawGameState {
   playersState: PlayerState[];
+  scoreMode: boolean;
   currentPlayer: number;
   currentRoll: number;
   dice: Die[];
@@ -10,6 +11,7 @@ export interface RawGameState {
 export interface GameState extends RawGameState {
   rollDice(): void;
   toggleDieLock(index: number): void;
+  setDieValue(index: number, value: number): void;
   choosePlayType(playType: PlayType): void;
   canRollDice: boolean;
   plays: Plays;
@@ -76,16 +78,20 @@ export const allPlayTypes = [
 
 export type Plays = Record<PlayType, number>;
 
-export function createInitialGameState(names: string[]): RawGameState {
+export function createInitialGameState(
+  names: string[],
+  scoreMode: boolean = false,
+): RawGameState {
   return {
     playersState: names.map((name) => ({
       name,
       plays: {},
       bonus: 0,
     })),
+    scoreMode,
     currentPlayer: 0,
     currentRoll: 0,
-    dice: [],
+    dice: scoreMode ? Array(5).fill({ value: 1, locked: false }) : [],
   };
 }
 
@@ -203,6 +209,18 @@ export default function useGameState(
     );
   };
 
+  const setDieValue = (index: number, value: number) => {
+    setGameState(
+      update(gameState, {
+        dice: {
+          [index]: {
+            value: { $set: value },
+          },
+        },
+      }),
+    );
+  };
+
   const choosePlayType = (playType: PlayType) => {
     const plays = update(
       gameState.playersState[gameState.currentPlayer].plays,
@@ -227,7 +245,11 @@ export default function useGameState(
           $set: (gameState.currentPlayer + 1) % gameState.playersState.length,
         },
         currentRoll: { $set: 0 },
-        dice: { $set: [] },
+        dice: {
+          $set: gameState.scoreMode
+            ? Array(5).fill({ value: 1, locked: false })
+            : [],
+        },
       }),
     );
   };
@@ -236,6 +258,7 @@ export default function useGameState(
     ...gameState,
     rollDice,
     toggleDieLock,
+    setDieValue,
     choosePlayType,
     canRollDice: gameState.currentRoll < 3,
     plays: {

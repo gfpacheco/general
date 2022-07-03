@@ -1,21 +1,22 @@
 import classNames from 'classnames';
 
 import useDieValue from '../hooks/useDieValue';
-import { Die as DieType } from '../hooks/useGameState';
+import { GameState } from '../hooks/useGameState';
 import Dot from './Dot';
 
 export interface DieProps extends React.ComponentPropsWithoutRef<'button'> {
-  currentRoll: number;
-  die?: DieType;
+  gameState: GameState;
+  index: number;
 }
 
 export default function Die({
   className,
-  currentRoll,
-  die,
+  gameState,
+  index,
   ...rest
 }: DieProps) {
-  const value = useDieValue(currentRoll, die);
+  const die = gameState.dice[index];
+  const value = useDieValue(gameState, index);
 
   return (
     <button
@@ -24,6 +25,14 @@ export default function Die({
         'relative flex-1 border rounded-lg p-2 grid grid-cols-3 grid-rows-3 items-center justify-items-center aspect-square',
         die?.locked && 'bg-gray-300',
       )}
+      onClick={
+        die
+          ? () =>
+              gameState.scoreMode
+                ? gameState.setDieValue(index, ((die?.value ?? 0) % 6) + 1)
+                : gameState.toggleDieLock(index)
+          : undefined
+      }
       {...rest}
     >
       <Dot value={value} visibleFor={[2, 3, 4, 5, 6]} />

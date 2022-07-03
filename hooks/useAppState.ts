@@ -13,6 +13,7 @@ export interface RawAppState {
 
 export interface AppState {
   startGame(names: string[]): void;
+  startScoreMode(names: string[]): void;
   gameState?: GameState;
   endGame(playerStates: PlayerState[]): void;
   playersState?: PlayerState[];
@@ -32,6 +33,10 @@ export default function useAppState(): AppState {
     setGameState(createInitialGameState(names));
   }
 
+  function startScoreMode(names: string[]) {
+    setGameState(createInitialGameState(names, true));
+  }
+
   function endGame(playersState: PlayerState[]) {
     setAppState({ playersState });
   }
@@ -42,6 +47,7 @@ export default function useAppState(): AppState {
 
   return {
     startGame,
+    startScoreMode,
     gameState,
     endGame,
     playersState,

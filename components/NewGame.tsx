@@ -6,11 +6,13 @@ import Input from './Input';
 
 export interface NewGameProps extends React.ComponentPropsWithoutRef<'div'> {
   onStartGame: (names: string[]) => void;
+  onStartScoreMode: (names: string[]) => void;
 }
 
 export default function NewGame({
   className,
   onStartGame,
+  onStartScoreMode,
   ...rest
 }: NewGameProps) {
   const [name, setName] = useState('');
@@ -37,6 +39,10 @@ export default function NewGame({
 
   function handleStartGame() {
     onStartGame(names);
+  }
+
+  function handleStartScoreMode() {
+    onStartScoreMode(names);
   }
 
   return (
@@ -74,6 +80,13 @@ export default function NewGame({
       <hr />
       <Button disabled={names.length === 0} onClick={handleStartGame}>
         Jogar
+      </Button>
+      <Button
+        disabled={names.length === 0}
+        onClick={handleStartScoreMode}
+        secondary
+      >
+        Marcar
       </Button>
     </div>
   );

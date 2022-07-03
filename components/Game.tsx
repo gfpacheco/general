@@ -131,20 +131,17 @@ export default function Game({
           </svg>
         </button>
       </h1>
-      <Button disabled={!gameState.canRollDice} onClick={gameState.rollDice}>
-        Rolar
-      </Button>
+      {!gameState.scoreMode && (
+        <Button disabled={!gameState.canRollDice} onClick={gameState.rollDice}>
+          Rolar
+        </Button>
+      )}
       <div className="grid grid-flow-col gap-2">
         {(gameState.dice.length
           ? gameState.dice
           : Array(5).fill(undefined)
         ).map((die, index) => (
-          <Die
-            key={index}
-            currentRoll={gameState.currentRoll}
-            die={die}
-            onClick={die ? () => gameState.toggleDieLock(index) : undefined}
-          />
+          <Die key={index} gameState={gameState} index={index} />
         ))}
       </div>
       <div className="min-h-0 py-4 border-t border-b grid grid-flow-row gap-1 overflow-y-auto">

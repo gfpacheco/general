@@ -6,8 +6,14 @@ import NewGame from '../components/NewGame';
 import useAppState from '../hooks/useAppState';
 
 const Home: NextPage = () => {
-  const { startGame, gameState, endGame, playersState, restartGame } =
-    useAppState();
+  const {
+    startGame,
+    startScoreMode,
+    gameState,
+    endGame,
+    playersState,
+    restartGame,
+  } = useAppState();
 
   return (
     <div className="h-full sm:p-4 flex flex-col items-center justify-center">
@@ -21,7 +27,7 @@ const Home: NextPage = () => {
             restartGame={restartGame}
           />
         ) : (
-          <NewGame onStartGame={startGame} />
+          <NewGame onStartGame={startGame} onStartScoreMode={startScoreMode} />
         )}
       </div>
     </div>

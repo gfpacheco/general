@@ -68,6 +68,7 @@ export default function NewGame({
       <hr />
       <form className="grid gap-2" onSubmit={handleAddPlayer}>
         <Input
+          name="name"
           placeholder="Digite o nome do jogador"
           value={name}
           onChange={handleNameChange}
